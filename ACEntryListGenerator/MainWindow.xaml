@@ -1,0 +1,69 @@
+﻿<Window x:Class="ACEntryListGenerator.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ACEntryListGenerator"
+        xmlns:core="clr-namespace:System;assembly=mscorlib"
+        mc:Ignorable="d"
+        Title="Entry List Generator" Height="543.161" Width="1383.306" ResizeMode="CanResizeWithGrip" MinWidth="1383.306" MaxWidth="1383.306">
+
+    <Window.Resources>
+        <ObjectDataProvider x:Key="regionEnum" MethodName="GetValues" ObjectType="{x:Type core:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type Type="local:Region"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </Window.Resources>
+
+    <Grid>
+        <DataGrid x:Name="dgEntryList" ItemsSource="{Binding}" Margin="10,10,164,18" AutoGenerateColumns="False" LoadingRow="dgEntryList_LoadingRow" local:VisualHelper.EnableRowsMove="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Name}" ClipboardContentBinding="{x:Null}" Header="Name" CanUserSort="False" Width="97"/>
+                <DataGridTextColumn Binding="{Binding Team}" ClipboardContentBinding="{x:Null}" Header="Team" CanUserSort="False" Width="129"/>
+                <DataGridTextColumn Binding="{Binding CarModel}" ClipboardContentBinding="{x:Null}" Header="Car" CanUserSort="False" Width="157"/>
+                <DataGridTextColumn Binding="{Binding CarSkin}" ClipboardContentBinding="{x:Null}" Header="Skin" CanUserSort="False" Width="173"/>
+                <DataGridTextColumn Binding="{Binding GUID}" ClipboardContentBinding="{x:Null}" Header="GUID" CanUserSort="False" Width="117"/>
+                <DataGridCheckBoxColumn Binding="{Binding HadBallastTag}" ClipboardContentBinding="{x:Null}" Header="Ballast" CanUserSort="False" Width="44"/>
+                <DataGridTextColumn Binding="{Binding Ballast}" ClipboardContentBinding="{x:Null}" Header="Ballast" CanUserSort="False" Width="44"/>
+                <DataGridCheckBoxColumn Binding="{Binding IsSpectator}" ClipboardContentBinding="{x:Null}" Header="Spectator" CanUserSort="False" Width="63"/>
+                <DataGridCheckBoxColumn Binding="{Binding HadFixedTag}" ClipboardContentBinding="{x:Null}" Header="Fixed Setup" CanUserSort="False" Width="71"/>
+                <DataGridTextColumn Binding="{Binding FixedSetup}" ClipboardContentBinding="{x:Null}" Header="Fixed Setup" CanUserSort="False" Width="71"/>
+                <DataGridComboBoxColumn Header="Region" SelectedItemBinding="{Binding Region}" ItemsSource="{Binding Source={StaticResource regionEnum}}"/>
+                <DataGridTextColumn Binding="{Binding RacePosition}" ClipboardContentBinding="{x:Null}" Header="Race Position" CanUserSort="False" Width="80"/>
+                <DataGridTextColumn Binding="{Binding LapTime, StringFormat=mm\\:ss\\.fff}" ClipboardContentBinding="{x:Null}" Header="Lap Time" IsReadOnly="True" CanUserSort="False" Width="58"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <StackPanel Orientation="Vertical" Margin="1216,10,0,20" HorizontalAlignment="Left" Width="149">
+
+            <GroupBox x:Name="groupBox2" Header="Entry List" Height="140" Margin="0,10,6,0" HorizontalAlignment="Right" Width="133">
+                <StackPanel HorizontalAlignment="Left" Margin="0,0,0,0" Width="121">
+                    <Button x:Name="btnOpenEntryList" Content="Open Entry List" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top" Width="105" Click="btnOpenEntryList_Click"/>
+                    <Button x:Name="btnSaveEntryList" Content="Save Entry List" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="105" Click="btnSaveEntryList_Click"/>
+                    <Button x:Name="btnDeleteEntry" Content="Delete Entry(s)" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="105" Click="btnDeleteEntry_Click"/>
+                    <Button x:Name="btnMassSetRegion" Content="Set Entry(s) Region" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="105" Click="BtnMassSetRegion_OnClick"></Button>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox x:Name="groupBox" Header="JSON" Margin="0,5,8,0" VerticalAlignment="Top" Height="150" HorizontalAlignment="Right" Width="131">
+                <StackPanel HorizontalAlignment="Left" Margin="0,0,-2,0" Width="121">
+                    <Button x:Name="btnLoadJson" Content="Load" Margin="10,5,0,0" Width="101" Click="btnLoadJson_Click" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <Label x:Name="lblDriverCount" Content="Drivers: 0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <ComboBox x:Name="cbSessions" Margin="10,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" IsEnabled="False" />
+                    <CheckBox x:Name="cbUpdateMissing" Margin="10,5,0,0" Content="UpdateMissing" />
+                    <Button x:Name="btnUpdateEntry" Content="Update Entries" Margin="10,5,0,0" Width="101" Click="btnUpdateEntry_Click" HorizontalAlignment="Left" VerticalAlignment="Top" IsEnabled="False"/>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox x:Name="groupBox1" Header="Sorting" Height="111" Margin="0,10,6,0" HorizontalAlignment="Right" Width="133">
+                <StackPanel HorizontalAlignment="Left" Margin="0,0,0,0" Width="121">
+                    <ComboBox x:Name="cbSortingType" Margin="5,5,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="106" />
+                    <StackPanel Height="29" Orientation="Horizontal" Margin="5,5,0,0">
+                        <Label x:Name="label" Content="Reverse:"/>
+                        <ComboBox x:Name="cbReverseList" Width="56" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    </StackPanel>
+                    <Button x:Name="btnSortEntries" Content="Sort" Click="btnSortEntries_Click" Margin="5,5,10,0" Width="85" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                </StackPanel>
+            </GroupBox>
+        </StackPanel>
+    </Grid>
+</Window>
