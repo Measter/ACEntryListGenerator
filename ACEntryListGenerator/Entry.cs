@@ -300,18 +300,7 @@ namespace ACEntryListGenerator
                     splitList[i].AddRange(classSplit[i]);
             }
 
-            foreach (string key in entriesByClass.Keys)
-            {
-                List<Entry> classList = entriesByClass[key];
-
-                while (classList.Count > 0)
-                {
-                    List<Entry> slowest = splitList.Last();
-
-                    slowest.Add( classList.First() );
-                    classList = classList.Skip( 1 ).ToList();
-                }
-            }
+            TryBalanceLeftOvers(entriesByClass, splitList, classes);
 
             for (int i = 0; i < splitList.Count; i++)
             {
@@ -320,7 +309,51 @@ namespace ACEntryListGenerator
             }
         }
 
-        private static List<List<Entry>> SplitClassByServerCount(List<Entry> entries, int serverCount, int minCarsPerClass)
+	    private static void TryBalanceLeftOvers(Dictionary<string, List<Entry>> entriesByClass, List<List<Entry>> splitList, Dictionary<string, string> classes)
+	    {
+	        foreach (string key in entriesByClass.Keys)
+	        {
+	            List<Entry> classList = entriesByClass[key];
+
+	            while (classList.Count > 0)
+	            {
+	                List<Entry> slowest = splitList.Last();
+	                List<Entry> secondSlowest = splitList[splitList.Count - 2];
+
+                    // Check if we need a promotion.
+	                if (Math.Abs(slowest.Count - secondSlowest.Count) >= 1)
+	                {
+	                    TryPromoteDriver(slowest, secondSlowest, classes);
+	                }
+
+	                slowest.Add(classList.First());
+	                classList = classList.Skip(1).ToList();
+	            }
+	        }
+	    }
+
+	    private static void TryPromoteDriver(List<Entry> slower, List<Entry> faster, Dictionary<string, string> classes)
+	    {
+	        var slowerByClass = GetEntryListByClass(slower, classes);
+	        var fasterByClass = GetEntryListByClass(faster, classes);
+
+	        var largestClass = slowerByClass.OrderByDescending(i => i.Value.Count).First();
+
+            // Move highest driver to faster server.
+	        fasterByClass[largestClass.Key].Add(largestClass.Value.First());
+	        slowerByClass[largestClass.Key] = slowerByClass[largestClass.Key].Skip(1).ToList();
+
+            // Re-combine entry lists.
+            slower.Clear();
+            foreach( var cat in slowerByClass )
+                slower.AddRange( cat.Value );
+
+            faster.Clear();
+            foreach( var cat in fasterByClass )
+                faster.AddRange( cat.Value );
+        }
+
+	    private static List<List<Entry>> SplitClassByServerCount(List<Entry> entries, int serverCount, int minCarsPerClass)
         {
             List<Entry> localList = new List<Entry>(entries);
 
@@ -345,6 +378,8 @@ namespace ACEntryListGenerator
 
             return splitList;
         }
+
+
 
         private static Dictionary<string, List<Entry>> GetEntryListByClass(List<Entry> entries, Dictionary<string, string> classes)
         {

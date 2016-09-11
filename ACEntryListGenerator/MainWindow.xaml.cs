@@ -24,6 +24,9 @@ namespace ACEntryListGenerator
         private readonly SaveFileDialog m_sfdEntryList;
         private readonly FolderBrowserDialog m_fbdEntryLists;
 
+        private const int MAX_PER_SERVER = 24;
+        private const int MIN_CARS_PER_CLASS = 5;
+
         private RaceData m_jsonData;
         private int m_maxPerServer;
         private int m_minCarsPerClass;
@@ -92,32 +95,40 @@ namespace ACEntryListGenerator
         {
             m_classes = new Dictionary<string, string>();
 
-            var parser = new FileIniDataParser();
-            IniData data = parser.ReadFile( "config.ini" );
-
-            foreach( SectionData section in data.Sections )
+            if (!File.Exists("config.ini"))
             {
-                if( section.SectionName.ToLower() == "basic" )
+                m_maxPerServer = MAX_PER_SERVER;
+                m_minCarsPerClass = MIN_CARS_PER_CLASS;
+            }
+            else
+            {
+                var parser = new FileIniDataParser();
+                IniData data = parser.ReadFile( "config.ini" );
+
+                foreach( SectionData section in data.Sections )
                 {
-                    foreach (KeyData key in section.Keys)
+                    if( section.SectionName.ToLower() == "basic" )
                     {
-                        if (key.KeyName.ToLower() == "carsperserver")
+                        foreach( KeyData key in section.Keys )
                         {
-                            if( Int32.TryParse( key.Value, out m_maxPerServer ) == false )
-                                m_maxPerServer = 24;
-                        } else if (key.KeyName.ToLower() == "mincarsperclass")
-                        {
-                            if (Int32.TryParse(key.Value, out m_minCarsPerClass) == false)
-                                m_minCarsPerClass = 5;
+                            if( key.KeyName.ToLower() == "carsperserver" )
+                            {
+                                if( Int32.TryParse( key.Value, out m_maxPerServer ) == false )
+                                    m_maxPerServer = MAX_PER_SERVER;
+                            } else if( key.KeyName.ToLower() == "mincarsperclass" )
+                            {
+                                if( Int32.TryParse( key.Value, out m_minCarsPerClass ) == false )
+                                    m_minCarsPerClass = MIN_CARS_PER_CLASS;
+                            }
                         }
-                    }
-                } else if( section.SectionName.ToLower() == "classes" )
-                {
-                    foreach( KeyData key in section.Keys )
+                    } else if( section.SectionName.ToLower() == "classes" )
                     {
-                        var cars = key.Value.Split(new []{','}, StringSplitOptions.RemoveEmptyEntries);
-                        foreach (string carName in cars)
-                            m_classes[carName] = key.KeyName;
+                        foreach( KeyData key in section.Keys )
+                        {
+                            var cars = key.Value.Split( new[] { ',' }, StringSplitOptions.RemoveEmptyEntries );
+                            foreach( string carName in cars )
+                                m_classes[carName] = key.KeyName;
+                        }
                     }
                 }
             }
