@@ -46,7 +46,7 @@
             </GroupBox>
             <GroupBox x:Name="groupBox" Header="Race Data" Margin="0,5,8,0" VerticalAlignment="Top" Height="150" HorizontalAlignment="Right" Width="131">
                 <StackPanel HorizontalAlignment="Left" Margin="0,0,-2,0" Width="121">
-                    <Button x:Name="btnLoadJson" Content="Load" Margin="10,5,0,0" Width="101" Click="btnLoadJson_Click" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <Button x:Name="btnLoadRaceData" Content="Load" Margin="10,5,0,0" Width="101" Click="btnLoadRaceData_Click" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                     <Label x:Name="lblDriverCount" Content="Drivers: 0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                     <ComboBox x:Name="cbSessions" Margin="10,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" IsEnabled="False" />
                     <CheckBox x:Name="cbUpdateMissing" Margin="10,5,0,0" Content="UpdateMissing" />

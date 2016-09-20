@@ -20,14 +20,14 @@ namespace ACEntryListGenerator
         private readonly EntryList m_entryList;
 
         private readonly OpenFileDialog m_ofdEntryList;
-        private readonly OpenFileDialog m_ofdJson;
+        private readonly OpenFileDialog m_ofdRaceData;
         private readonly SaveFileDialog m_sfdEntryList;
         private readonly FolderBrowserDialog m_fbdEntryLists;
 
         private const int MAX_PER_SERVER = 24;
         private const int MIN_CARS_PER_CLASS = 5;
 
-        private RaceData m_jsonData;
+        private RaceData m_raceData;
         private int m_maxPerServer;
         private int m_minCarsPerClass;
         private Dictionary<string, string> m_classes;
@@ -41,17 +41,17 @@ namespace ACEntryListGenerator
             Time
         }
 
-        public RaceData JSONData
+        public RaceData RaceData
         {
             get
             {
-                return m_jsonData;
+                return m_raceData;
             }
             private set
             {
-                if( Equals( value, m_jsonData ) )
+                if( Equals( value, m_raceData ) )
                     return;
-                m_jsonData = value;
+                m_raceData = value;
             }
         }
 
@@ -70,11 +70,11 @@ namespace ACEntryListGenerator
             m_ofdEntryList.Filter = "Entry List|*.ini";
             m_ofdEntryList.CheckPathExists = true;
 
-            m_ofdJson = new OpenFileDialog();
-            m_ofdJson.Title = "Select JSON File to Load";
-            m_ofdJson.FileName = "race_out.json";
-            m_ofdJson.Filter = "JSON File|*.json";
-            m_ofdJson.CheckPathExists = true;
+            m_ofdRaceData = new OpenFileDialog();
+            m_ofdRaceData.Title = "Select JSON File to Load";
+            m_ofdRaceData.FileName = "race_out.json";
+            m_ofdRaceData.Filter = "JSON File|*.json";
+            m_ofdRaceData.CheckPathExists = true;
 
             m_sfdEntryList = new SaveFileDialog();
             m_sfdEntryList.Title = "Choose Location of Entry List";
@@ -151,20 +151,20 @@ namespace ACEntryListGenerator
             cbReverseList.SelectedIndex = 9;
         }
 
-        private void btnLoadJson_Click( object sender, RoutedEventArgs e )
+        private void btnLoadRaceData_Click( object sender, RoutedEventArgs e )
         {
-            if( m_ofdJson.ShowDialog() != System.Windows.Forms.DialogResult.OK )
+            if( m_ofdRaceData.ShowDialog() != System.Windows.Forms.DialogResult.OK )
                 return;
 
-            RawRaceData rawData = JsonConvert.DeserializeObject<RawRaceData>( File.ReadAllText( m_ofdJson.FileName ) );
-            JSONData = RaceData.ParseRawData( rawData );
+            RawRaceData rawData = JsonConvert.DeserializeObject<RawRaceData>( File.ReadAllText( m_ofdRaceData.FileName ) );
+            RaceData = RaceData.ParseRawData( rawData );
 
-            lblDriverCount.Content = $"Drivers: {JSONData.Drivers.Count}";
+            lblDriverCount.Content = $"Drivers: {RaceData.Drivers.Count}";
 
-            if( JSONData.AllSessions.Count > 0 )
+            if( RaceData.AllSessions.Count > 0 )
             {
                 cbSessions.IsEnabled = true;
-                cbSessions.ItemsSource = JSONData.AllSessions;
+                cbSessions.ItemsSource = RaceData.AllSessions;
                 cbSessions.SelectedIndex = 0;
 
                 btnUpdateEntry.IsEnabled = true;
