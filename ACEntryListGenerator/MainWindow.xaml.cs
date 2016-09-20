@@ -27,7 +27,7 @@ namespace ACEntryListGenerator
         private const int MAX_PER_SERVER = 24;
         private const int MIN_CARS_PER_CLASS = 5;
 
-        private RaceData m_raceData;
+        private RaceData m_raceSessionData;
         private int m_maxPerServer;
         private int m_minCarsPerClass;
         private Dictionary<string, string> m_classes;
@@ -41,17 +41,17 @@ namespace ACEntryListGenerator
             Time
         }
 
-        public RaceData RaceData
+        public RaceData RaceSessionData
         {
             get
             {
-                return m_raceData;
+                return m_raceSessionData;
             }
             private set
             {
-                if( Equals( value, m_raceData ) )
+                if( Equals( value, m_raceSessionData ) )
                     return;
-                m_raceData = value;
+                m_raceSessionData = value;
             }
         }
 
@@ -159,10 +159,10 @@ namespace ACEntryListGenerator
             if( Path.GetExtension(m_ofdRaceData.FileName) == ".json" )
             {
                 RawRaceData rawData = JsonConvert.DeserializeObject<RawRaceData>( File.ReadAllText( m_ofdRaceData.FileName ) );
-                RaceData = RaceData.ParseRawJSONData( rawData ); 
+                RaceSessionData = RaceData.ParseRawJSONData( rawData ); 
             } else if (Path.GetExtension(m_ofdRaceData.FileName) == ".tsv")
             {
-                RaceData = RaceData.ParseRawTSVData( File.ReadAllLines( m_ofdRaceData.FileName ) );
+                RaceSessionData = RaceData.ParseRawTSVData( File.ReadAllLines( m_ofdRaceData.FileName ) );
             }
             else
             {
@@ -170,12 +170,12 @@ namespace ACEntryListGenerator
                 return;
             }
 
-            lblDriverCount.Content = $"Drivers: {RaceData.Drivers.Count}";
+            lblDriverCount.Content = $"Drivers: {RaceSessionData.Drivers.Count}";
 
-            if( RaceData.AllSessions.Count > 0 )
+            if( RaceSessionData.AllSessions.Count > 0 )
             {
                 cbSessions.IsEnabled = true;
-                cbSessions.ItemsSource = RaceData.AllSessions;
+                cbSessions.ItemsSource = RaceSessionData.AllSessions;
                 cbSessions.SelectedIndex = 0;
 
                 btnUpdateEntry.IsEnabled = true;
