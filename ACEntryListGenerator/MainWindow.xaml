@@ -37,15 +37,14 @@
 
         <StackPanel Orientation="Vertical" Margin="1216,10,0,20" HorizontalAlignment="Left" Width="149">
 
-            <GroupBox x:Name="groupBox2" Header="Entry List" Height="140" Margin="0,10,6,0" HorizontalAlignment="Right" Width="133">
+            <GroupBox x:Name="groupBox2" Header="Entry List" Height="112" Margin="0,10,6,0" HorizontalAlignment="Right" Width="133">
                 <StackPanel HorizontalAlignment="Left" Margin="0,0,0,0" Width="121">
                     <Button x:Name="btnOpenEntryList" Content="Open Entry List" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top" Width="105" Click="btnOpenEntryList_Click"/>
                     <Button x:Name="btnSaveEntryList" Content="Save Entry List" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="105" Click="btnSaveEntryList_Click"/>
                     <Button x:Name="btnDeleteEntry" Content="Delete Entry(s)" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="105" Click="btnDeleteEntry_Click"/>
-                    <Button x:Name="btnMassSetRegion" Content="Set Entry(s) Region" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="105" Click="BtnMassSetRegion_OnClick"></Button>
                 </StackPanel>
             </GroupBox>
-            <GroupBox x:Name="groupBox" Header="JSON" Margin="0,5,8,0" VerticalAlignment="Top" Height="150" HorizontalAlignment="Right" Width="131">
+            <GroupBox x:Name="groupBox" Header="Race Data" Margin="0,5,8,0" VerticalAlignment="Top" Height="150" HorizontalAlignment="Right" Width="131">
                 <StackPanel HorizontalAlignment="Left" Margin="0,0,-2,0" Width="121">
                     <Button x:Name="btnLoadJson" Content="Load" Margin="10,5,0,0" Width="101" Click="btnLoadJson_Click" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                     <Label x:Name="lblDriverCount" Content="Drivers: 0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
