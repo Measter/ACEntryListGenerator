@@ -28,7 +28,7 @@ namespace ACEntryListGenerator
 
 		public List<CleanSession> AllSessions { get; } = new List<CleanSession>();
 
-		public static RaceData ParseRawData( RawRaceData rawData )
+		public static RaceData ParseRawJSONData( RawRaceData rawData )
 		{
 			RaceData rd = new RaceData();
 
@@ -112,6 +112,14 @@ namespace ACEntryListGenerator
 
 			return rd;
 		}
+
+	    public RaceData ParseRawTSVData(string[] tsvLines)
+	    {
+	        RaceData data = new RaceData();
+
+
+	        return data;
+	    }
 	}
 
 	[DebuggerDisplay( "{Name}" )]

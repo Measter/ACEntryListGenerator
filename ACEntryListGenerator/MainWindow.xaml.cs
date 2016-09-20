@@ -156,8 +156,19 @@ namespace ACEntryListGenerator
             if( m_ofdRaceData.ShowDialog() != System.Windows.Forms.DialogResult.OK )
                 return;
 
-            RawRaceData rawData = JsonConvert.DeserializeObject<RawRaceData>( File.ReadAllText( m_ofdRaceData.FileName ) );
-            RaceData = RaceData.ParseRawData( rawData );
+            if( Path.GetExtension(m_ofdRaceData.FileName) == ".json" )
+            {
+                RawRaceData rawData = JsonConvert.DeserializeObject<RawRaceData>( File.ReadAllText( m_ofdRaceData.FileName ) );
+                RaceData = RaceData.ParseRawJSONData( rawData ); 
+            } else if (Path.GetExtension(m_ofdRaceData.FileName) == ".tsv")
+            {
+                RaceData = RaceData.ParseRawTSVData( File.ReadAllLines( m_ofdRaceData.FileName ) );
+            }
+            else
+            {
+                MessageBox.Show("Error: Invalid race data extension.", "Error", MessageBoxButtons.OK);
+                return;
+            }
 
             lblDriverCount.Content = $"Drivers: {RaceData.Drivers.Count}";
 
