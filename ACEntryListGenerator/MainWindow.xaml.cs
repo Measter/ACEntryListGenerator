@@ -71,9 +71,9 @@ namespace ACEntryListGenerator
             m_ofdEntryList.CheckPathExists = true;
 
             m_ofdRaceData = new OpenFileDialog();
-            m_ofdRaceData.Title = "Select JSON File to Load";
-            m_ofdRaceData.FileName = "race_out.json";
-            m_ofdRaceData.Filter = "JSON File|*.json";
+            m_ofdRaceData.Title = "Select Race Data File to Load";
+            m_ofdRaceData.FileName = String.Empty;
+            m_ofdRaceData.Filter = "JSON File|*.json|Tab Separated File|*.tsv";
             m_ofdRaceData.CheckPathExists = true;
 
             m_sfdEntryList = new SaveFileDialog();
