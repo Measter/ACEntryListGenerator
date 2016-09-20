@@ -113,12 +113,40 @@ namespace ACEntryListGenerator
 			return rd;
 		}
 
-	    public RaceData ParseRawTSVData(string[] tsvLines)
+	    public static RaceData ParseRawTSVData(string[] tsvLines)
 	    {
 	        RaceData data = new RaceData();
 
+            CleanSession session = new CleanSession();
+            data.AllSessions.Add(session);
+            data.UnknownSessions.Add(session);
 
-	        return data;
+	        session.Name = "Championship Position";
+
+            foreach( string line in tsvLines )
+            {
+                if( line.StartsWith( "ACRL" ) || line.StartsWith( "POS" ) )
+                    continue;
+
+                Driver curDriver = new Driver();
+                session.DriversInSession.Add(curDriver);
+                data.Drivers.Add(curDriver);
+
+                CleanLap lap = new CleanLap();
+                lap.Driver = curDriver;
+                lap.LapNumber = 1;
+                lap.Time = TimeSpan.Zero;
+
+                curDriver.BestLapBySession[session] = lap;
+
+                string[] lineParts = line.Split( '\t' );
+
+                curDriver.Name = lineParts[4];
+                int position;
+                session.Result[curDriver] = Int32.TryParse(lineParts[0], out position) ? position : 0;
+            }
+
+            return data;
 	    }
 	}
 
