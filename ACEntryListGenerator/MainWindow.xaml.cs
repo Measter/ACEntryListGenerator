@@ -8,14 +8,17 @@ using IniParser.Model;
 using Newtonsoft.Json;
 using MessageBox = System.Windows.Forms.MessageBox;
 using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows.Controls;
+using ACEntryListGenerator.Annotations;
 
 namespace ACEntryListGenerator
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml					   
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
         private readonly EntryList m_entryList;
 
@@ -33,6 +36,8 @@ namespace ACEntryListGenerator
         private Dictionary<string, string> m_classes;
 
         private readonly string m_sizeDialogText = "The Entry list is larger than the maximum cars per server ({0})\n\n Split the entry list to fit in the {1} servers?";
+        private string m_ballastStep;
+        private string m_ballastStart;
 
         private enum SortingType
         {
@@ -55,6 +60,37 @@ namespace ACEntryListGenerator
             }
         }
 
+        public String BallastStep
+        {
+            get { return m_ballastStep; }
+            set
+            {
+                if (value == m_ballastStep) return;
+                m_ballastStep = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public String BallastStart
+        {
+            get { return m_ballastStart; }
+            set
+            {
+                if (value == m_ballastStart) return;
+                m_ballastStart = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged( [CallerMemberName] string propertyName = null )
+        {
+            PropertyChanged?.Invoke( this, new PropertyChangedEventArgs( propertyName ) );
+        }
+
+
         public MainWindow()
         {
             InitializeComponent();
@@ -63,6 +99,11 @@ namespace ACEntryListGenerator
 
             m_entryList = new EntryList();
             dgEntryList.DataContext = m_entryList.Entries;
+
+            BallastStart = "30";
+            BallastStep = "3";
+            
+            tbBallastStart.DataContext = tbBallastStep.DataContext = this;
 
             m_ofdEntryList = new OpenFileDialog();
             m_ofdEntryList.Title = "Select Entry List to Load";
@@ -273,7 +314,21 @@ namespace ACEntryListGenerator
 
         private void btnApplyBallast_Click( object sender, RoutedEventArgs e )
         {
+            Int32 ballast = 0, ballastStep = 0;
 
+            if (!Int32.TryParse(BallastStart, out ballast) || !Int32.TryParse(BallastStep, out ballastStep))
+                MessageBox.Show("Error parsing ballast input.\n\nPlease only enter positive numbers.", "Parse Error", MessageBoxButtons.OK);
+
+            if (ballast < 0 || ballastStep < 0)
+                MessageBox.Show("Error parsing ballast input.\n\nPlease only enter positive numbers.", "Parse Error", MessageBoxButtons.OK);
+
+            foreach (Entry entry in m_entryList.Entries)
+            {
+                entry.Ballast = ballast.ToString();
+                entry.HadBallastTag = true;
+
+                ballast = Math.Max(0, ballast - ballastStep);
+            }
         }
     }
 }

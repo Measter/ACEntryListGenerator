@@ -67,11 +67,11 @@
                 <StackPanel HorizontalAlignment="Left" Margin="0,0,0,0" Width="121">
                     <StackPanel Height="29" Orientation="Horizontal" Margin="5,0,0,0">
                         <Label x:Name="lblInit" Content="Start:"/>
-                        <TextBox x:Name="tbBallastStart" Width="56" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                        <TextBox x:Name="tbBallastStart" Width="56" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding BallastStart}"/>
                     </StackPanel>
                     <StackPanel Height="29" Orientation="Horizontal" Margin="5,0,0,0">
                         <Label x:Name="lblStep" Content="Step:"/>
-                        <TextBox x:Name="tbBallastStep" Width="56" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                        <TextBox x:Name="tbBallastStep" Width="56" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding BallastStep}"/>
                     </StackPanel>
                     <Button x:Name="btnApplyBallast" Content="Apply" Margin="5,5,10,0" Width="85" VerticalAlignment="Top" HorizontalAlignment="Left" Click="btnApplyBallast_Click"/>
                 </StackPanel>
