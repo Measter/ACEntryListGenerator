@@ -29,7 +29,7 @@
                 <DataGridCheckBoxColumn Binding="{Binding IsSpectator}" ClipboardContentBinding="{x:Null}" Header="Spectator" CanUserSort="False" Width="63"/>
                 <DataGridCheckBoxColumn Binding="{Binding HadFixedTag}" ClipboardContentBinding="{x:Null}" Header="Fixed Setup" CanUserSort="False" Width="71"/>
                 <DataGridTextColumn Binding="{Binding FixedSetup}" ClipboardContentBinding="{x:Null}" Header="Fixed Setup" CanUserSort="False" Width="71"/>
-                <DataGridComboBoxColumn Header="Region" SelectedItemBinding="{Binding Region}" ItemsSource="{Binding Source={StaticResource regionEnum}}"/>
+                <DataGridComboBoxColumn Header="Region" SelectedItemBinding="{Binding Region}" ItemsSource="{Binding Source={StaticResource regionEnum}}" CanUserSort="False"/>
                 <DataGridTextColumn Binding="{Binding RacePosition}" ClipboardContentBinding="{x:Null}" Header="Race Position" CanUserSort="False" Width="80"/>
                 <DataGridTextColumn Binding="{Binding LapTime, StringFormat=mm\\:ss\\.fff}" ClipboardContentBinding="{x:Null}" Header="Lap Time" IsReadOnly="True" CanUserSort="False" Width="58"/>
             </DataGrid.Columns>
