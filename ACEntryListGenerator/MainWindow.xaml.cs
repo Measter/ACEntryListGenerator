@@ -270,6 +270,10 @@ namespace ACEntryListGenerator
             foreach( Entry ent in selItems )
                 ent.Region = box.Region;
         }
-        
+
+        private void btnApplyBallast_Click( object sender, RoutedEventArgs e )
+        {
+
+        }
     }
 }

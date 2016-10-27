@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:ACEntryListGenerator"
         xmlns:core="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
-        Title="Entry List Generator" Height="543.161" Width="1383.306" ResizeMode="CanResizeWithGrip" MinWidth="1383.306" MaxWidth="1383.306">
+        Title="Entry List Generator" Height="586.161" Width="1383.306" ResizeMode="CanResizeWithGrip" MinWidth="1383.306" MaxWidth="1383.306">
 
     <Window.Resources>
         <ObjectDataProvider x:Key="regionEnum" MethodName="GetValues" ObjectType="{x:Type core:Enum}">
@@ -57,10 +57,23 @@
                 <StackPanel HorizontalAlignment="Left" Margin="0,0,0,0" Width="121">
                     <ComboBox x:Name="cbSortingType" Margin="5,5,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="106" />
                     <StackPanel Height="29" Orientation="Horizontal" Margin="5,5,0,0">
-                        <Label x:Name="label" Content="Reverse:"/>
+                        <Label x:Name="lblRev" Content="Reverse:"/>
                         <ComboBox x:Name="cbReverseList" Width="56" VerticalAlignment="Top" HorizontalAlignment="Left"/>
                     </StackPanel>
                     <Button x:Name="btnSortEntries" Content="Sort" Click="btnSortEntries_Click" Margin="5,5,10,0" Width="85" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox x:Name="groupBox3" Header="Ballast" Height="111" Margin="0,10,6,0" HorizontalAlignment="Right" Width="133">
+                <StackPanel HorizontalAlignment="Left" Margin="0,0,0,0" Width="121">
+                    <StackPanel Height="29" Orientation="Horizontal" Margin="5,0,0,0">
+                        <Label x:Name="lblInit" Content="Start:"/>
+                        <TextBox x:Name="tbBallastStart" Width="56" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                    </StackPanel>
+                    <StackPanel Height="29" Orientation="Horizontal" Margin="5,0,0,0">
+                        <Label x:Name="lblStep" Content="Step:"/>
+                        <TextBox x:Name="tbBallastStep" Width="56" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                    </StackPanel>
+                    <Button x:Name="btnApplyBallast" Content="Apply" Margin="5,5,10,0" Width="85" VerticalAlignment="Top" HorizontalAlignment="Left" Click="btnApplyBallast_Click"/>
                 </StackPanel>
             </GroupBox>
         </StackPanel>
