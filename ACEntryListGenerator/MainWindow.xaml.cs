@@ -106,6 +106,7 @@ namespace ACEntryListGenerator
             ReadConfig();
 
             m_entryList = new EntryList();
+            m_entryList.EntryListChanged += ( sender, len ) => { btnLoadRaceData.IsEnabled = len != 0; };
             dgEntryList.DataContext = m_entryList.Entries;
 
             BallastStart = "30";

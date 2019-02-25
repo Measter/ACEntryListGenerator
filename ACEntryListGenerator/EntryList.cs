@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 
 namespace ACEntryListGenerator
 {
@@ -12,6 +13,8 @@ namespace ACEntryListGenerator
 		{
 			get;
 		}
+        
+	    public event EventHandler<int> EntryListChanged;
 
 		private Random m_rand = new Random();
 
@@ -22,19 +25,28 @@ namespace ACEntryListGenerator
 
 		private void UpdateEntryList( List<Entry> newList )
 		{
-			Entries.Clear();
+		    var oldLen = Entries.Count;
+
+		    Entries.Clear();
 
 			foreach( Entry entry in newList )
 				Entries.Add( entry );
+
+		    if( oldLen != Entries.Count )
+		        OnEntryListLengthChanged();
 		}
 
 		public void AddEntries( IEnumerable<Entry> newEntries )
 		{
-			var uniqueEntries = newEntries.Except( Entries, Entry.NameComparer ).ToList();
+		    var oldLen = Entries.Count;
+		    var uniqueEntries = newEntries.Except( Entries, Entry.NameComparer ).ToList();
 
 			// Observable collection has no way to add a list of items to it.
 			foreach( Entry e in uniqueEntries )
 				Entries.Add( e );
+
+		    if( oldLen != Entries.Count )
+		        OnEntryListLengthChanged();
 		}
 
 		public void DeleteEntries( IEnumerable<Entry> deletedEntries )
@@ -75,6 +87,12 @@ namespace ACEntryListGenerator
 				}
 			}
 		}
+
+	    private void OnEntryListLengthChanged()
+	    {
+	        var handler = EntryListChanged;
+	        handler?.Invoke( this, Entries.Count );
+	    }
 
 
 		private List<Entry> ReverseEntries( List<Entry> entries, int reverseUpTo )
