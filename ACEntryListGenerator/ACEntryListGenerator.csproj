@@ -68,7 +68,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="RaceData.cs" />
-    <Compile Include="RawRaceData.cs" />
+    <Compile Include="RawClientRaceData.cs" />
+    <Compile Include="RawServerRaceData.cs" />
     <Compile Include="Region.cs" />
     <Compile Include="SetRegionDialog.xaml.cs">
       <DependentUpon>SetRegionDialog.xaml</DependentUpon>

@@ -28,15 +28,15 @@ namespace ACEntryListGenerator
 
 		public List<CleanSession> AllSessions { get; } = new List<CleanSession>();
 
-		public static RaceData ParseRawJSONData( RawRaceData rawData )
+		public static RaceData ParseRawJSONData( RawClientRaceData rawClientData )
 		{
 			RaceData rd = new RaceData();
 
-			rd.TrackName = rawData.track;
+			rd.TrackName = rawClientData.track;
 
-			for( int i = 0; i < rawData.players.Length; i++ )
+			for( int i = 0; i < rawClientData.players.Length; i++ )
 			{
-				Player rawDriver = rawData.players[i];
+				RawClientPlayer rawDriver = rawClientData.players[i];
 				Driver cleanDriver = new Driver();
 				cleanDriver.Car = rawDriver.car;
 				cleanDriver.ID = i;
@@ -46,9 +46,9 @@ namespace ACEntryListGenerator
 				rd.Drivers.Add( cleanDriver );
 			}
 
-			for( int i = 0; i < rawData.sessions.Length; i++ )
+			for( int i = 0; i < rawClientData.sessions.Length; i++ )
 			{
-				Session ses = rawData.sessions[i];
+				RawClientSession ses = rawClientData.sessions[i];
 				CleanSession cSess = new CleanSession();
 
 				rd.AllSessions.Add( cSess );
@@ -79,7 +79,7 @@ namespace ACEntryListGenerator
 
 				}	
 
-				foreach( Lap rawLap in ses.laps )
+				foreach( RawClientLap rawLap in ses.laps )
 				{
 					CleanLap cLap = new CleanLap();
 					cLap.LapNumber = rawLap.lap; 
@@ -92,7 +92,7 @@ namespace ACEntryListGenerator
 					cSess.AddDriver( driv );
 				}
 
-				foreach( Bestlap rawLap in ses.bestLaps )
+				foreach( RawClientBestlap rawLap in ses.bestLaps )
 				{
 					Driver driv = rd.Drivers[rawLap.car];
 					CleanLap cLap = driv.LapsBySession[cSess][rawLap.lap];

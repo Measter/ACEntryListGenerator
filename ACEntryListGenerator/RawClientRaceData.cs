@@ -1,9 +1,10 @@
 ﻿using System.Diagnostics;
+using Newtonsoft.Json;
 
 namespace ACEntryListGenerator
 {
 
-	public class RawRaceData
+	public class RawClientRaceData
 	{
 		public string track
 		{
@@ -13,22 +14,23 @@ namespace ACEntryListGenerator
 		{
 			get; set;
 		}
-		public Player[] players
+		public RawClientPlayer[] players
 		{
 			get; set;
 		}
-		public Session[] sessions
+		public RawClientSession[] sessions
 		{
 			get; set;
 		}
-		public Extra[] extras
+		public RawClientExtra[] extras
 		{
 			get; set;
 		}
 	}
 
 	[DebuggerDisplay( "{name} - {car}" )]
-	public class Player
+    [JsonObject( "player" )]
+    public class RawClientPlayer
 	{
 		public string name
 		{
@@ -45,7 +47,8 @@ namespace ACEntryListGenerator
 	}
 
 	[DebuggerDisplay( "Session: {name}" )]
-	public class Session
+    [JsonObject( "session" )]
+    public class RawClientSession
 	{
 		public int _event
 		{
@@ -67,7 +70,7 @@ namespace ACEntryListGenerator
 		{
 			get; set;
 		}
-		public Lap[] laps
+		public RawClientLap[] laps
 		{
 			get; set;
 		}
@@ -75,7 +78,7 @@ namespace ACEntryListGenerator
 		{
 			get; set;
 		}
-		public Bestlap[] bestLaps
+		public RawClientBestlap[] bestLaps
 		{
 			get; set;
 		}
@@ -85,7 +88,8 @@ namespace ACEntryListGenerator
 		}
 	}
 
-	public class Lap
+    [JsonObject( "lap" )]
+    public class RawClientLap
 	{
 		public int lap
 		{
@@ -105,7 +109,8 @@ namespace ACEntryListGenerator
 		}
 	}
 
-	public class Bestlap
+    [JsonObject( "bestlap" )]
+    public class RawClientBestlap
 	{
 		public int car
 		{
@@ -121,7 +126,8 @@ namespace ACEntryListGenerator
 		}
 	}
 
-	public class Extra
+    [JsonObject( "extra" )]
+    public class RawClientExtra
 	{
 		public string name
 		{

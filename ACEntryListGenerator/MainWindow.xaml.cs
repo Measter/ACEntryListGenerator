@@ -62,10 +62,14 @@ namespace ACEntryListGenerator
 
         public String BallastStep
         {
-            get { return m_ballastStep; }
+            get
+            {
+                return m_ballastStep;
+            }
             set
             {
-                if (value == m_ballastStep) return;
+                if( value == m_ballastStep )
+                    return;
                 m_ballastStep = value;
                 OnPropertyChanged();
             }
@@ -73,10 +77,14 @@ namespace ACEntryListGenerator
 
         public String BallastStart
         {
-            get { return m_ballastStart; }
+            get
+            {
+                return m_ballastStart;
+            }
             set
             {
-                if (value == m_ballastStart) return;
+                if( value == m_ballastStart )
+                    return;
                 m_ballastStart = value;
                 OnPropertyChanged();
             }
@@ -102,13 +110,13 @@ namespace ACEntryListGenerator
 
             BallastStart = "30";
             BallastStep = "3";
-            
+
             tbBallastStart.DataContext = tbBallastStep.DataContext = this;
 
             m_ofdEntryList = new OpenFileDialog();
             m_ofdEntryList.Title = "Select Entry List to Load";
             m_ofdEntryList.FileName = "entry_list.ini";
-            m_ofdEntryList.Filter = "Entry List|*.ini";
+            m_ofdEntryList.Filter = "Entry List|*.ini|Server Session Data|*.json";
             m_ofdEntryList.CheckPathExists = true;
 
             m_ofdRaceData = new OpenFileDialog();
@@ -136,12 +144,11 @@ namespace ACEntryListGenerator
         {
             m_classes = new Dictionary<string, string>();
 
-            if (!File.Exists("config.ini"))
+            if( !File.Exists( "config.ini" ) )
             {
                 m_maxPerServer = MAX_PER_SERVER;
                 m_minCarsPerClass = MIN_CARS_PER_CLASS;
-            }
-            else
+            } else
             {
                 var parser = new FileIniDataParser();
                 IniData data = parser.ReadFile( "config.ini" );
@@ -180,16 +187,43 @@ namespace ACEntryListGenerator
             if( m_ofdEntryList.ShowDialog() != System.Windows.Forms.DialogResult.OK )
                 return;
 
-            cbReverseList.SelectedIndex = -1;
-            cbReverseList.Items.Clear();
+            try
+            {
+                List<Entry> newEntries;
 
-            List<Entry> newEntries = Entry.ParseEntryList( File.ReadAllLines( m_ofdEntryList.FileName ) );
-            m_entryList.AddEntries( newEntries );
+                if( m_ofdEntryList.FileName.EndsWith( ".ini" ) )
+                {
+                    newEntries = Entry.ParseEntryList( File.ReadAllLines( m_ofdEntryList.FileName ) );
+                } else
+                {
+                    RawServerRaceData rawServerData = JsonConvert.DeserializeObject<RawServerRaceData>( File.ReadAllText( m_ofdEntryList.FileName ) );
 
-            for( int i = 1; i <= m_entryList.Entries.Count; i++ )
-                cbReverseList.Items.Add( i );
+                    newEntries = Entry.ParseEntryList( rawServerData );
+                }
 
-            cbReverseList.SelectedIndex = 9;
+
+                cbReverseList.SelectedIndex = -1;
+                cbReverseList.Items.Clear();
+
+                m_entryList.AddEntries( newEntries );
+            } catch( Exception ex )
+            {
+                MessageBox.Show( $"The following error ocurred while attempting to load the entry list:\n\n{ex.ToString()}", "Error Loading Entry List", MessageBoxButtons.OK );
+            } finally
+            {
+                if( m_entryList.Entries.Count > 0 )
+                {
+                    for( int i = 1; i <= m_entryList.Entries.Count; i++ )
+                        cbReverseList.Items.Add( i );
+
+                    cbReverseList.SelectedIndex = 9;
+                } else
+                {
+                    cbReverseList.SelectedIndex = -1;
+                }
+            }
+
+
         }
 
         private void btnLoadRaceData_Click( object sender, RoutedEventArgs e )
@@ -197,17 +231,16 @@ namespace ACEntryListGenerator
             if( m_ofdRaceData.ShowDialog() != System.Windows.Forms.DialogResult.OK )
                 return;
 
-            if( Path.GetExtension(m_ofdRaceData.FileName) == ".json" )
+            if( Path.GetExtension( m_ofdRaceData.FileName ) == ".json" )
             {
-                RawRaceData rawData = JsonConvert.DeserializeObject<RawRaceData>( File.ReadAllText( m_ofdRaceData.FileName ) );
-                RaceSessionData = RaceData.ParseRawJSONData( rawData ); 
-            } else if (Path.GetExtension(m_ofdRaceData.FileName) == ".tsv")
+                RawClientRaceData rawClientData = JsonConvert.DeserializeObject<RawClientRaceData>( File.ReadAllText( m_ofdRaceData.FileName ) );
+                RaceSessionData = RaceData.ParseRawJSONData( rawClientData );
+            } else if( Path.GetExtension( m_ofdRaceData.FileName ) == ".tsv" )
             {
                 RaceSessionData = RaceData.ParseRawTSVData( File.ReadAllLines( m_ofdRaceData.FileName ) );
-            }
-            else
+            } else
             {
-                MessageBox.Show("Error: Invalid race data extension.", "Error", MessageBoxButtons.OK);
+                MessageBox.Show( "Error: Invalid race data extension.", "Error", MessageBoxButtons.OK );
                 return;
             }
 
@@ -257,9 +290,9 @@ namespace ACEntryListGenerator
 
         private void btnSaveEntryList_Click( object sender, RoutedEventArgs e )
         {
-            int serverCount = (int) Math.Ceiling(m_entryList.Entries.Count/(float) m_maxPerServer);
+            int serverCount = (int)Math.Ceiling( m_entryList.Entries.Count / (float)m_maxPerServer );
 
-            if( m_entryList.Entries.Count <= m_maxPerServer || MessageBox.Show( String.Format(m_sizeDialogText, m_maxPerServer, serverCount), "Entry List Too Big", MessageBoxButtons.YesNo ) != System.Windows.Forms.DialogResult.Yes )
+            if( m_entryList.Entries.Count <= m_maxPerServer || MessageBox.Show( String.Format( m_sizeDialogText, m_maxPerServer, serverCount ), "Entry List Too Big", MessageBoxButtons.YesNo ) != System.Windows.Forms.DialogResult.Yes )
             {
                 if( m_sfdEntryList.ShowDialog() != System.Windows.Forms.DialogResult.OK )
                     return;
@@ -316,18 +349,18 @@ namespace ACEntryListGenerator
         {
             Int32 ballast = 0, ballastStep = 0;
 
-            if (!Int32.TryParse(BallastStart, out ballast) || !Int32.TryParse(BallastStep, out ballastStep))
-                MessageBox.Show("Error parsing ballast input.\n\nPlease only enter positive numbers.", "Parse Error", MessageBoxButtons.OK);
+            if( !Int32.TryParse( BallastStart, out ballast ) || !Int32.TryParse( BallastStep, out ballastStep ) )
+                MessageBox.Show( "Error parsing ballast input.\n\nPlease only enter positive numbers.", "Parse Error", MessageBoxButtons.OK );
 
-            if (ballast < 0 || ballastStep < 0)
-                MessageBox.Show("Error parsing ballast input.\n\nPlease only enter positive numbers.", "Parse Error", MessageBoxButtons.OK);
+            if( ballast < 0 || ballastStep < 0 )
+                MessageBox.Show( "Error parsing ballast input.\n\nPlease only enter positive numbers.", "Parse Error", MessageBoxButtons.OK );
 
-            foreach (Entry entry in m_entryList.Entries)
+            foreach( Entry entry in m_entryList.Entries )
             {
                 entry.Ballast = ballast.ToString();
                 entry.HadBallastTag = true;
 
-                ballast = Math.Max(0, ballast - ballastStep);
+                ballast = Math.Max( 0, ballast - ballastStep );
             }
         }
     }
